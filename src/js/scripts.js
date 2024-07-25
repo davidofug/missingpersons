@@ -172,7 +172,7 @@ async function fetchData(){
             throw new error(`HTTP error! status: ${response.status}`);
         }
         const {data} = await response.json();
-        // console.log(data)
+        console.log(data)
         return data
 
     }catch(error){
@@ -198,7 +198,7 @@ function createPersonElement(person){
     personElement.innerHTML = `
         <div class="card" data-category="${person.status}">
             <div class="card-inner">
-                <img class="card-img" src="${person.image}" alt="${person.name}">
+                <img class="card-img" src="${person.photo_url}" alt="${person.name}">
                 <h2 class='card__name'>${person.name}</h2>
                 <p class='card-status ${person.status.toLowerCase()}'>${person.status}</p>
                 <p class='card__office'>Taken by ${person.security_organ}</p>
