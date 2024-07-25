@@ -1,6 +1,6 @@
  // Define the shareCard function globally
  function shareCard(id) {
-    fetch("data.json")
+    fetch(CONFIG.url)
         .then((response) => response.json())
         .then((data) => {
             const card = data.find((item) => item.id === id);
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function searchFunction() {
         let input = document.getElementById('searchInput');
         state.searchQuery = input.value.toLowerCase().trim();
-        
+
         // Reset pagination
         state.currentIndex = 0;
         state.allDataLoaded = false;
@@ -101,15 +101,15 @@ document.addEventListener("DOMContentLoaded", function() {
         state.currentIndex = 0;
         state.allPersonsLoaded = false;
         elements.personsList.innerHTML = '';
-        
+
         let filteredData = originalPersonsData;
-    
+
         if (category !== 'All') {
             filteredData = filteredData.filter(person => person.status === category);
         }
-        
+
         state.personsData = filteredData;
-        
+
         loadPersons();
 
         // Show a message if no results found
@@ -134,13 +134,13 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-/* 
+/*
     Pagination functionality
 */
 
 // pagination configuration
 const CONFIG = {
-    url: `data.json`,
+    url: `https://dashboard.missingpersonsug.org/api/victims` || `data.json`,
     personsPerPage: 18,
     scrollThreshold: 100,
     scrollDelay: 200,
@@ -171,7 +171,10 @@ async function fetchData(){
         if(!response.ok){
             throw new error(`HTTP error! status: ${response.status}`);
         }
-        return await response.json();
+        const {data} = await response.json();
+        // console.log(data)
+        return data
+
     }catch(error){
         state.isLoading = false;
         console.error("Error fetching data.", error);
@@ -183,7 +186,7 @@ async function fetchData(){
 /**
  * Returns a person's element object
  *
- * @param {person} object - data.json object 
+ * @param {person} object - data.json object
  */
 function createPersonElement(person){
     const personElement = document.createElement('div');
@@ -217,7 +220,7 @@ function loadPersons(){
     if(state.searchQuery === ''){
         if(state.isLoading || state.allPersonsLoaded) return;
     }
-    
+
     state.isLoading = true;
     elements.loading.style.display = 'flex';
 
@@ -273,7 +276,7 @@ function handleScroll() {
     }
 }
 
-// run pagination 
+// run pagination
 async function initPaginate(){
     originalPersonsData = await fetchData();
     state.personsData = [...originalPersonsData];

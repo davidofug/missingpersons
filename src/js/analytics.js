@@ -1,6 +1,6 @@
- 
+
  // Fetch data from JSON file
- fetch('data.json')
+ fetch(CONFIG.url)
      .then(response => {
          if (!response.ok) {
              throw new Error('Network response was not ok');
